@@ -1,0 +1,131 @@
+.container{
+    display: flex;
+}
+
+.wrapper {
+    flex: 5;
+    height: 100%;
+}
+
+.top {
+    height: 40vh;
+}
+
+.bottom {
+    height: 40vh;
+    display: flex;
+    justify-content: center;
+    margin-top: 100px
+}
+
+.imageWrapper {
+    height: 100%;
+    position: relative;
+}
+
+.image {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 80px;
+    border: 3px solid white;
+
+}
+
+.input {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    margin: auto;
+    top: 80px;
+    opacity: 0;
+}
+
+.button {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    margin: auto;
+    top: 80px;
+    opacity: 0.5;
+    border: none;
+}
+
+.info {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    width: 50vw;
+}
+
+.item {
+    display: flex;
+    gap:10px;
+    width: 50%;
+    margin: 0px 0px 20px 100px;
+}
+
+.edit {
+    display: flex;
+    justify-content: center;
+    gap: 20px
+}
+
+.editButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:10px;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgb(46, 131, 46);
+    color: white
+}
+
+.editButton:hover {
+    color: yellow
+}
+
+.editButton:active {
+    color: blue
+}
+
+.wait {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: orange
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red
+}
+
+/*edit password modal*/
+.password {
+    display: flex;
+    align-items: center;
+    gap:10px
+}
+
+.icon {
+    font-size: 22px;
+    cursor: pointer;
+}

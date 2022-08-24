@@ -1,0 +1,15 @@
+.errorWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.error {
+    color: red;
+    font-size: 15px;
+    margin-bottom: 5px
+}
+
+.required {
+    color: red;
+}

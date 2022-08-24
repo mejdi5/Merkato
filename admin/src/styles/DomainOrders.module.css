@@ -1,0 +1,111 @@
+.container{
+    display: flex;
+}
+
+.wrapper {
+    flex: 5;
+    height: 100%
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    height: 40px
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    height: 50px
+}
+
+.domainId, .domainName{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.domainLabel {
+    font-weight: bold;
+}
+
+.action {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.deleteIcon {
+    cursor: pointer;
+    font-size: 20px;
+    color: grey
+}
+
+.deleteIcon:hover {
+    color: black
+}
+
+.visibilityIcon {
+    cursor: pointer;
+    font-size: 20px;
+    color: rgb(96, 143, 151)
+}
+
+.visibilityIcon:hover {
+    color: rgb(61, 47, 169)
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 15px
+}
+
+.deliveredIcon {
+    color: green;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.declinedIcon {
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.inProgressIcon {
+    color: grey;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.noOrders {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.backIcon {
+    cursor:pointer;
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+.datagrid {
+    height: calc(100% - 90px);
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #888; 
+};

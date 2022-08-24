@@ -1,0 +1,77 @@
+.container{
+    display: flex;
+}
+
+.wrapper {
+    flex: 5;
+    height: 100%
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    height: 40px
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    height: 120px
+}
+
+.productTitle {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    margin-bottom: 15px;
+    gap: 15px
+}
+
+.image {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+}
+
+.domainId, .domainName, .orderId{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.domainLabel {
+    font-weight: bold;
+}
+
+.total {
+    font-weight: bold;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: 10px;
+}
+
+.datagrid {
+    height: calc(100% - 200px);
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #888; 
+};
+
+.total {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    height: 40px
+}

@@ -1,0 +1,121 @@
+.container {
+    flex: 1;
+    border-right: 1px solid black;
+    min-height: 100vh;
+    background-color: black;
+    overflow: hidden;
+}
+
+.header {
+    height: 50px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding-top: 20px;
+    padding-left: 10px;
+}
+
+.image {
+    width: 3vw;
+    height: 3vw;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.logo {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: blue;
+    cursor: pointer;
+}
+
+.hr {
+    height: 0;
+    border: 0.5px solid rgb(230, 227, 227);
+}
+
+.body {
+    padding-left: 10px;
+    height: 100%
+}
+
+.links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(98, 128, 130);
+    margin-top: 15px;
+    margin-bottom: 5px;
+    text-align: start;
+}
+
+.li {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+    margin: 10px 0px
+}
+
+.li:hover .item{
+    color: #2e1db0;
+}
+
+.li:hover .currentItem{
+    color: #2e1db0;
+}
+
+.li:hover .icon{
+    color: #2e1db0;
+}
+
+.li:hover .currentIcon{
+    color: #2e1db0;
+}
+
+.icon {
+    font-size: 20px;
+    color: white;
+    margin-left: 5px;
+}
+
+.icon:active {
+    color: red
+}
+
+.currentIcon {
+    font-size: 20px;
+    color: green;
+    margin-left: 5px;
+}
+
+.item{
+    font-size: 17px;
+    font-weight: 600;
+    color: #888;
+    margin-left: 15px;
+}
+
+.item:active {
+    color: red
+}
+
+.currentItem {
+    font-size: 17px;
+    font-weight: 600;
+    color: green;
+    margin-left: 15px;
+}

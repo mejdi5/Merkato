@@ -1,0 +1,84 @@
+.container{
+    display: flex;
+}
+
+.wrapper {
+    flex: 5;
+    height: 100%
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    height: 40px;
+    margin-bottom: 15px;
+}
+
+.name {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.action {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.deleteIcon {
+    cursor: pointer;
+    font-size: 20px;
+    color: rgb(227, 147, 133)
+}
+
+.deleteIcon:hover {
+    color: red
+}
+
+.orderIcon {
+    cursor: pointer;
+    font-size: 20px;
+    color: rgb(146, 176, 146)
+}
+
+.orderIcon:hover {
+    color: green
+}
+
+.msg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: green
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red
+}
+
+.datagrid {
+    height: calc(100% - 60px);
+    overflow-y: scroll;
+    position: fixed;
+    margin: 0px 20px;
+    margin-bottom: 25px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #888; 
+};

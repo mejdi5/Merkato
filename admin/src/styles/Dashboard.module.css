@@ -1,0 +1,23 @@
+.container{
+    display: flex;
+}
+
+.wrapper {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.top {
+    height: 30%;
+    margin: 20px;
+    margin-bottom: 10px;
+}
+
+.bottom{
+    display: flex;
+    height: 70%;
+    margin: 20px;
+    margin-top: 10px;
+}

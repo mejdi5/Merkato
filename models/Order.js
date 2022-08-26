@@ -27,7 +27,7 @@ const OrderSchema = new mongoose.Schema(
         city: {type: String, required: true},
         zipCode: {type: Number},
     },
-    status: { type: String, default: "In Progress" },
+    status: { type: String, enum: ["in progress", "delivered", "declined"], default: "in progress" },
 },
 { timestamps: true }
 );

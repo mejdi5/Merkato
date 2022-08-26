@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import { Fetch } from '../Fetch';
 import styles from '../styles/FeaturedInfo.module.css'
-import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai'
 import {useSelector, useDispatch} from 'react-redux'
 import {getOrders} from '../redux/orderSlice'
 
@@ -32,6 +31,7 @@ const FeaturedInfo = () => {
         return orderDate === todayDate
     })
     const todayIncome = todayOrders.length > 0 ? todayOrders.map(order => order.totalToPay).reduce((a,b) => a + b) : 0
+    const todayRevenue = todayOrders.length > 0 ? todayOrders.map(order => order.fees).reduce((a,b) => a + b) : 0
 
     //current week
     const lastSunday = new Date(new Date().setDate(new Date().getDate() - new Date().getDay()));
@@ -41,6 +41,7 @@ const FeaturedInfo = () => {
         return (orderDate >= lastSundayDate && new Date(order.createdAt).getDay() - lastSunday.getDay() < 7)
     })
     const thisWeekIncome = thisWeekOrders.length > 0 ? thisWeekOrders.map(order => order.totalToPay).reduce((a,b) => a + b) : 0
+    const thisWeekRevenue = thisWeekOrders.length > 0 ? thisWeekOrders.map(order => order.fees).reduce((a,b) => a + b) : 0
 
     //current month
     const thisMonthOrders = orders && orders.filter(order => {
@@ -48,10 +49,12 @@ const FeaturedInfo = () => {
         new Date(order.createdAt).getFullYear() === new Date().getFullYear()
     })
     const thisMonthIncome = thisMonthOrders.length > 0 ? thisMonthOrders.map(order => order.totalToPay).reduce((a,b) => a + b) : 0
+    const thisMonthRevenue = thisMonthOrders.length > 0 ? thisMonthOrders.map(order => order.fees).reduce((a,b) => a + b) : 0
 
     //current year
     const thisYearOrders = orders && orders.filter(order => new Date(order.createdAt).getFullYear() === new Date().getFullYear())
     const thisYearIncome = thisYearOrders.length > 0 ? thisYearOrders.map(order => order.totalToPay).reduce((a,b) => a + b) : 0
+    const thisYearRevenue = thisYearOrders.length > 0 ? thisYearOrders.map(order => order.fees).reduce((a,b) => a + b) : 0
 
 
 
@@ -63,12 +66,20 @@ return (
             <span className={styles.featuredTitle} >Total sales today</span>
             <span className={styles.featuredMoney} >{todayIncome.toFixed(2)} TND</span>
         </div>
+        <div className={styles.featuredMoneyContainer}>
+            <span className={styles.featuredTitle} >Revenue</span>
+            <span className={styles.featuredMoney} >{todayRevenue.toFixed(2)} TND</span>
+        </div>
     </div>
     <div className={styles.featuredInfo}>
         <h4>THIS WEEK</h4>
         <div className={styles.featuredMoneyContainer}>
             <span className={styles.featuredTitle} >Total sales from last sunday</span>
             <span className={styles.featuredMoney} >{thisWeekIncome.toFixed(2)} TND</span>
+        </div>
+        <div className={styles.featuredMoneyContainer}>
+            <span className={styles.featuredTitle} >Revenue</span>
+            <span className={styles.featuredMoney} >{thisWeekRevenue.toFixed(2)} TND</span>
         </div>
     </div>
     <div className={styles.featuredInfo}>
@@ -77,12 +88,20 @@ return (
             <span className={styles.featuredTitle} >Total sales this month</span>
             <span className={styles.featuredMoney} >{thisMonthIncome.toFixed(2)} TND</span>
         </div>
+        <div className={styles.featuredMoneyContainer}>
+            <span className={styles.featuredTitle} >Revenue</span>
+            <span className={styles.featuredMoney} >{thisMonthRevenue.toFixed(2)} TND</span>
+        </div>
     </div>
     <div className={styles.featuredInfo}>
         <h4>{new Date().getFullYear()}</h4>
         <div className={styles.featuredMoneyContainer}>
             <span className={styles.featuredTitle} >Total sales this year</span>
             <span className={styles.featuredMoney} >{thisYearIncome.toFixed(2)} TND</span>
+        </div>
+        <div className={styles.featuredMoneyContainer}>
+            <span className={styles.featuredTitle} >Revenue</span>
+            <span className={styles.featuredMoney} >{thisYearRevenue.toFixed(2)} TND</span>
         </div>
     </div>
 </div>

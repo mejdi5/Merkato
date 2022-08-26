@@ -15,6 +15,7 @@ const ProductSchema = new mongoose.Schema(
     size: { type: String },
     color: { type: String },
     inStock: { type: Boolean, default: true },
+    likes: {type: Array}
 },
 { timestamps: true }
 );

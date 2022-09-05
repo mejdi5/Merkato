@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import styles from '../styles/AllDeliveryGuys.module.css'
 import Sidebar from '../components/Sidebar'
 import { getAllDeliveryGuys } from '../redux/userSlice';
+import { getOrders } from '../redux/orderSlice';
 import { Fetch } from '../Fetch';
 import { useDispatch, useSelector } from 'react-redux'
 import { GrAdd } from 'react-icons/gr'
@@ -10,10 +11,15 @@ import ReactDataGrid from 'react-data-grid';
 import AddDeliveryGuyModal from '../components/AddDeliveryGuyModal';
 import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import {HiStatusOnline, HiOutlineStatusOffline} from 'react-icons/hi'
+import {BiBlock} from 'react-icons/bi'
+import {CgUnblock} from 'react-icons/cg'
+
 
 const AllDeliveryGuys = () => {
 
     const deliveryGuys = useSelector(state => state.userSlice.deliveryGuys)
+    const orders = useSelector(state => state.orderSlice.orders)
     const dispatch = useDispatch()
     const [msg, setMsg] = useState(null)
     const [error, setError] = useState(null)
@@ -47,6 +53,33 @@ const AllDeliveryGuys = () => {
         });
     };
 
+    const handleBlockDeliveryGuy = async (e, id) => {
+        e.preventDefault();
+        try {
+            await Fetch.put(`/users/deliveryGuy/${id}`, {isBlocked: true}, {headers: {token: localStorage.token}})
+            setMsg("Delivery Guy blocked")
+            setTimeout(() => setMsg(null), 5000)
+        } catch (error) {
+            console.log(error)
+            setError('Action not allowed')
+            setTimeout(() => setError(null), 5000)
+        }
+    };
+
+    const handleUnblockDeliveryGuy = async (e, id) => {
+        e.preventDefault();
+        try {
+            await Fetch.put(`/users/deliveryGuy/${id}`, {isBlocked: false}, {headers: {token: localStorage.token}})
+            setMsg("Delivery Guy unblocked")
+            setTimeout(() => setMsg(null), 5000)
+        } catch (error) {
+            console.log(error)
+            setError('Action not allowed')
+            setTimeout(() => setError(null), 5000)
+        }
+    };
+
+
     useEffect(() => {
     const getDeliveryGuys = async () => {
         try {
@@ -59,8 +92,27 @@ const AllDeliveryGuys = () => {
     getDeliveryGuys();
     }, [deliveryGuys]);
 
+    useEffect(() => {
+        const getAllOrders = async () => {
+            try {
+            const res = await Fetch.get("/orders", {headers: {token: localStorage.token}}); 
+            dispatch(getOrders(res.data));
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        getAllOrders();
+    }, [orders]);
+
 
     const rows = deliveryGuys?.map((deliveryGuy) => {
+        const deliveryOrders = orders.filter(order => order?.deliveredBy === deliveryGuy?._id)
+        const deliveryRevenue = deliveryOrders.length > 0 
+            ? deliveryOrders.map(order => order.deliveryCost).reduce((a,b) => a + b)
+            : 0
+        const merkatoRevenue = deliveryOrders.length > 0 
+            ? deliveryOrders.map(order => order.fees).reduce((a,b) => a + b)
+            : 0
     return {
     id: deliveryGuy?._id,
     cin: deliveryGuy?.cin,
@@ -77,8 +129,35 @@ const AllDeliveryGuys = () => {
     email: deliveryGuy?.email,
     phoneNumber: deliveryGuy?.phoneNumber,
     address: deliveryGuy?.address,
+    deliveryRevenue: `${deliveryRevenue} TND`,
+    merkatoRevenue: `${merkatoRevenue} TND`,
+    isBlocked: deliveryGuy?.isBlocked 
+        ? (
+            <div className={styles.isBlocked}>
+                <HiOutlineStatusOffline className={styles.offline}/>
+                <span>Suspended</span>
+            </div>
+        )
+        : (
+            <div className={styles.isBlocked}>
+                <HiStatusOnline className={styles.online}/>
+                <span>Active</span>
+            </div>
+        ),
     action: (
         <div className={styles.action}>
+            {!deliveryGuy.isBlocked 
+            ? 
+            <BiBlock 
+            className={styles.blockIcon} 
+            onClick={(e) => handleBlockDeliveryGuy(e, deliveryGuy?._id)}
+            />
+            : 
+            <CgUnblock 
+            className={styles.unBlockIcon} 
+            onClick={(e) => handleUnblockDeliveryGuy(e, deliveryGuy?._id)}
+            />
+            }
             <AiFillDelete
             className={styles.deleteIcon}
             onClick={() => confirmDeletingDeliveryGuy(deliveryGuy._id)}
@@ -95,12 +174,12 @@ const AllDeliveryGuys = () => {
     {
         key: "cin",
         name: "CIN",
-        width: 100
+        width: 80
     },
     {
         key: "name",
         name: "NAME",
-        width: 250
+        width: 200
     },
     {
         key: "email",
@@ -109,12 +188,28 @@ const AllDeliveryGuys = () => {
     },
     {
         key: "phoneNumber",
-        name: "PHONE NUMBER"
+        name: "PHONE",
+        width: 80
     },
     {
         key: "address",
         name: "ADDRESS",
-        width: 400
+        width: 150
+    },
+    {
+        key: "deliveryRevenue",
+        name: "DELIVERY REVENUE",
+        width: 135
+    },
+    {
+        key: "merkatoRevenue",
+        name: "MERKATO REVENUE",
+        width: 135
+    },
+    {
+        key: "isBlocked",
+        name: "STATUS",
+        width: 120
     },
     {
         key: "action",

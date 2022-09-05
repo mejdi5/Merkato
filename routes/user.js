@@ -28,7 +28,7 @@ router.get("/", isAdmin, async (req, res) => {
 //Get all delivery guys (for admin)
 router.get("/delivery-guys", isAdmin, async (req, res) => {
     try {
-    const deliveryGuys = await User.find({userType: "delivery guy"}).sort({createdAt: -1});
+    const deliveryGuys = await User.find({userType: "delivery_guy"}).sort({createdAt: -1});
     res.status(200).json(deliveryGuys);
     if(req.headers.token) {
         req.headers.token = undefined
@@ -40,7 +40,7 @@ router.get("/delivery-guys", isAdmin, async (req, res) => {
 
 
 //Add delivery guy (for admin)
-router.post("/delivery-guy", nameValidation,cinValidation , emailValidation, passwordValidation , validator, isAdmin, async (req, res) => {
+router.post("/delivery-guy", nameValidation, cinValidation , emailValidation, passwordValidation , validator, isAdmin, async (req, res) => {
     const newUser = new User({
         name: req.body.name,
         cin: req.body.cin,
@@ -51,7 +51,7 @@ router.post("/delivery-guy", nameValidation,cinValidation , emailValidation, pas
             req.body.password, 
             process.env.PASSWORD_SECRET
         ).toString(),
-        userType: "delivery guy",
+        userType: "delivery_guy",
         isVerified: true
     });
     try {
@@ -62,7 +62,6 @@ router.post("/delivery-guy", nameValidation,cinValidation , emailValidation, pas
         res.status(500).json(error);
     }
 });
-
 
 //Edit user (for the user itself)
 router.put("/:userId", isAuthenticated, async (req, res) => {
@@ -77,6 +76,23 @@ router.put("/:userId", isAuthenticated, async (req, res) => {
     } else {
         res.status(403).json("You are not allowed to do that!");
     } 
+    }catch (err) {
+    res.status(500).json(err);
+    }
+});
+
+//block/Unblock delivery guy (for the user itself)
+router.put("/deliveryGuy/:deliveryGuyId", isAdmin, async (req, res) => {
+    console.log(req.body)
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+        req.params.deliveryGuyId,   
+        {$set: {
+            isBlocked: req.body.isBlocked
+        }},
+        { new: true }
+        );
+    res.status(200).json(updatedUser);
     }catch (err) {
     res.status(500).json(err);
     }

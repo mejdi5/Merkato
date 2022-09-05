@@ -9,10 +9,11 @@ const UserSchema = new mongoose.Schema(
     phoneNumber: { type: Number },
     image: {type: String},
     address: {type: String, default: null},
-    userType: { type: String, enum: ["admin", "delivery guy", "user"], default: "user"},
-    isVerified: { type: Boolean, default: false }
-},
+    userType: { type: String, enum: ["admin", "delivery_guy", "user"], default: "user"},
+    isVerified: { type: Boolean, default: false },
+    isBlocked: { type: Boolean, default: false},
+}, 
 { timestamps: true }
 );
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema); 

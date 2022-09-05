@@ -62,7 +62,8 @@ router.post("/login/:userType", validator, async (req, res) => {
         {
             id: user._id,
             userType: user.userType,
-            isVerified: user.isVerified
+            isVerified: user.isVerified,
+            isBlocked: user.isBlocked
         },
         process.env.JWT_SECRET,
         {expiresIn:"3d"}

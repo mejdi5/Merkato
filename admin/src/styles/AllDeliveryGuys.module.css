@@ -25,6 +25,22 @@
     border-radius: 50%;
 }
 
+.isBlocked {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.offline {
+    font-size: 20px;
+    color: red
+}
+
+.online {
+    font-size: 20px;
+    color: green
+}
+
 .action {
     display: flex;
     justify-content: space-evenly;
@@ -36,11 +52,31 @@
 .deleteIcon {
     cursor: pointer;
     font-size: 20px;
-    color: rgb(227, 147, 133)
+    color: black
 }
 
 .deleteIcon:hover {
     color: red
+}
+
+.blockIcon {
+    cursor: pointer;
+    font-size: 20px;
+    color: rgb(227, 147, 133)
+}
+
+.blockIcon:hover {
+    color: red
+}
+
+.unBlockIcon {
+    cursor: pointer;
+    font-size: 20px;
+    color: rgb(133, 165, 85)
+}
+
+.unlockIcon:hover {
+    color: rgb(3, 121, 3)
 }
 
 .orderIcon {

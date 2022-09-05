@@ -29,7 +29,7 @@ const FeaturedInfo = () => {
     const todayOrders = orders && orders.filter(order => {
         const orderDate = new Date(order.createdAt).getFullYear()+'-'+(new Date(order.createdAt).getMonth()+1)+'-'+ new Date(order.createdAt).getDate()
         return orderDate === todayDate
-    })
+    }).filter(order => order.status === "delivered")
     const todayIncome = todayOrders.length > 0 ? todayOrders.map(order => order.totalToPay).reduce((a,b) => a + b) : 0
     const todayRevenue = todayOrders.length > 0 ? todayOrders.map(order => order.fees).reduce((a,b) => a + b) : 0
 
@@ -39,7 +39,7 @@ const FeaturedInfo = () => {
     const thisWeekOrders = orders && orders.filter(order => {
         const orderDate = new Date(order.createdAt).getFullYear()+'-'+(new Date(order.createdAt).getMonth()+1)+'-'+ new Date(order.createdAt).getDate()
         return (orderDate >= lastSundayDate && new Date(order.createdAt).getDay() - lastSunday.getDay() < 7)
-    })
+    }).filter(order => order.status === "delivered")
     const thisWeekIncome = thisWeekOrders.length > 0 ? thisWeekOrders.map(order => order.totalToPay).reduce((a,b) => a + b) : 0
     const thisWeekRevenue = thisWeekOrders.length > 0 ? thisWeekOrders.map(order => order.fees).reduce((a,b) => a + b) : 0
 
@@ -47,12 +47,14 @@ const FeaturedInfo = () => {
     const thisMonthOrders = orders && orders.filter(order => {
         return new Date(order.createdAt).getMonth() === new Date().getMonth() &&
         new Date(order.createdAt).getFullYear() === new Date().getFullYear()
-    })
+    }).filter(order => order.status === "delivered")
     const thisMonthIncome = thisMonthOrders.length > 0 ? thisMonthOrders.map(order => order.totalToPay).reduce((a,b) => a + b) : 0
     const thisMonthRevenue = thisMonthOrders.length > 0 ? thisMonthOrders.map(order => order.fees).reduce((a,b) => a + b) : 0
 
     //current year
-    const thisYearOrders = orders && orders.filter(order => new Date(order.createdAt).getFullYear() === new Date().getFullYear())
+    const thisYearOrders = orders && 
+    orders.filter(order => new Date(order.createdAt).getFullYear() === new Date().getFullYear())
+    .filter(order => order.status === "delivered")
     const thisYearIncome = thisYearOrders.length > 0 ? thisYearOrders.map(order => order.totalToPay).reduce((a,b) => a + b) : 0
     const thisYearRevenue = thisYearOrders.length > 0 ? thisYearOrders.map(order => order.fees).reduce((a,b) => a + b) : 0
 

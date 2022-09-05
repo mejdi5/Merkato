@@ -79,7 +79,7 @@ isAuthenticated(req, res, () => {
 
 const isDeliveryGuy = (req, res, next) => {
 isAuthenticated(req, res, () => {
-    if (req.user.userType === "delivery guy") {
+    if (req.user.userType === "delivery_guy") {
         next();
     } else {
         res.status(403).json("You are not allowed to do that!");

@@ -110,16 +110,42 @@ try {
 }
 });
 
-//set order as delivered or declined
-router.put("/delivery/:orderId", isDeliveryGuy,  async (req, res) => {
+//set order as delivered 
+router.put("/delivered/:orderId", isDeliveryGuy,  async (req, res) => {
     try {
         if(!req.user.isVerified) {
             res.status(402).json("You must verify your account first")
         } 
+        if(req.user.isBlocked) {
+            res.status(402).json("Action not allowed, You are blocked by the admin")
+        } 
         const updatedOrder = await Order.findByIdAndUpdate(
         req.params.orderId,
         {$set: {
-            status: req.body.status
+            status: "delivered",
+            deliveredBy: req.user.id
+        }},
+        { new: true }
+        );
+        res.status(200).json(updatedOrder);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+//set order as declined
+router.put("/declined/:orderId", isDeliveryGuy,  async (req, res) => {
+    try {
+        if(!req.user.isVerified) {
+            res.status(402).json("You must verify your account first")
+        } 
+        if(req.user.isBlocked) {
+            res.status(402).json("Action not allowed, You are blocked by the admin")
+        } 
+        const updatedOrder = await Order.findByIdAndUpdate(
+        req.params.orderId,
+        {$set: {
+            status: "declined"
         }},
         { new: true }
         );

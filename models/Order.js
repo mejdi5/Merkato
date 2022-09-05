@@ -19,7 +19,7 @@ const OrderSchema = new mongoose.Schema(
     },
     ],
     total: { type: Number },
-    deliveryCost: { type: Number },
+    deliveryCost: { type: Number }, 
     fees: { type: Number },
     totalToPay: { type: Number },
     address: {
@@ -28,6 +28,7 @@ const OrderSchema = new mongoose.Schema(
         zipCode: {type: Number},
     },
     status: { type: String, enum: ["in progress", "delivered", "declined"], default: "in progress" },
+    deliveredBy: {type: String, default: null}
 },
 { timestamps: true }
 );

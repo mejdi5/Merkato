@@ -73,7 +73,7 @@ const AllUsers = () => {
 
     const rows = users.map((user) => {
       return {
-      id: user._id,
+      id: user?._id,
       cin: user?.cin,
       name: (
           <div className={styles.name}>
@@ -82,10 +82,10 @@ const AllUsers = () => {
             src={user?.image || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"}
             alt="" 
             />
-            {user.name.toUpperCase()}
+            {user?.name?.toUpperCase()}
           </div>
         ),
-      email: user.email,
+      email: user?.email,
       phoneNumber: user?.phoneNumber,
       address: user?.address,
       transactions: getUserTransactions(user?._id),

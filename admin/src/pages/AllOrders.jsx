@@ -24,6 +24,10 @@ const AllOrders = () => {
     const navigate = useNavigate()
     const [msg, setMsg] = useState(null)
     const [error, setError] = useState(null)
+    const [domainName, setDomainName] = useState('')
+    const [customerName, setCustomerName] = useState('')
+    const [governorate, setGovernorate] = useState('')
+    const [status, setStatus] = useState('all')
 
     
     const handleDeleteOrder = async (id) => {
@@ -64,10 +68,27 @@ const AllOrders = () => {
     };
     getAllOrders();
     }, [orders]);
-    
 
 
-    const rows = orders.map((order) => {
+    const rows = orders?.filter(order => 
+        status === "delivered" 
+        ? order.status === "delivered"
+        : status === "declined"
+        ? order.status === "declined"
+        : status === "in progress"
+        ? order.status === "in progress"
+        : true
+    )
+    .filter(order => {
+        const customer = users?.find(u => u?._id === order?.userId)
+        return customer.name.toLowerCase().trim().startsWith(customerName.toLowerCase().trim())
+    })
+    .filter(order => order.address.governorate?.toLowerCase().trim().startsWith(governorate.toLowerCase().trim()))
+    .filter(order => {
+            const domain = marketPlaces?.find(m => m?._id === order?.domainId)
+            return domain?.name?.toLowerCase().trim().startsWith(domainName.toLowerCase().trim())
+        })
+    .map((order) => {
         const user = users?.find(u => u?._id === order?.userId)
         const domain = marketPlaces?.find(m => m?._id === order?.domainId)
     return {
@@ -104,6 +125,8 @@ const AllOrders = () => {
         </div>
     )
     }})
+
+    
     
     const columns = [
     {
@@ -168,11 +191,41 @@ const AllOrders = () => {
     },
 ]
 
+
 return (
 <div className={styles.container}>
     <Sidebar/>
     <div className={styles.wrapper}>
     <div className={styles.title}><h2>ALL ORDERS</h2></div>
+    <div className={styles.header}>
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Domain Name..'
+        value={domainName}
+        onChange={e => setDomainName(e.target.value)}
+        />
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Customer Name..'
+        value={customerName}
+        onChange={e => setCustomerName(e.target.value)}
+        />
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Governorate..'
+        value={governorate}
+        onChange={e => setGovernorate(e.target.value)}
+        />
+        <select onChange={e => setStatus(e.target.value)} className={styles.search}>
+            <option value="all" defaultValue>All</option>
+            <option value="in progress">In Progress</option>
+            <option value="delivered">Delivered</option>
+            <option value="declined">Declined</option>
+        </select>
+    </div>
     {msg && <div className={styles.msg}>{msg}</div>} 
     {error && <div className={styles.error}>{error}</div>}
     <ReactDataGrid
@@ -180,7 +233,6 @@ return (
     columns={columns}
     rows={rows}
     />
-    
     </div>
 </div>
 )}

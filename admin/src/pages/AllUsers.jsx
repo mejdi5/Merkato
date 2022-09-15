@@ -20,7 +20,8 @@ const AllUsers = () => {
     const navigate = useNavigate()
     const [msg, setMsg] = useState(null)
     const [error, setError] = useState(null)
-
+    const [name, setName] = useState('')
+    const [address, setAddress] = useState('')
 
     const getUserTransactions = id =>  {
       if (orders.some((order) => order.userId === id && order.status !== "declined")) {
@@ -71,7 +72,9 @@ const AllUsers = () => {
     getUsers();
     }, [users]);
 
-    const rows = users.map((user) => {
+    const rows = users.filter(user => user.address.toLowerCase().trim().startsWith(address.toLowerCase().trim()))
+    .filter(user => user.name.toLowerCase().trim().startsWith(name.toLowerCase().trim()))
+    .map((user) => {
       return {
       id: user?._id,
       cin: user?.cin,
@@ -157,6 +160,22 @@ return (
     <Sidebar/>
     <div className={styles.wrapper}>
         <div className={styles.title}><h2>ALL USERS</h2></div>
+        <div className={styles.header}>
+          <input
+            className={styles.search}
+            type='text'
+            placeholder='Name..'
+            value={name}
+            onChange={e => setName(e.target.value)}
+            />
+            <input
+            className={styles.search}
+            type='text'
+            placeholder='Address..'
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            />
+        </div>
         {msg && <div className={styles.msg}>{msg}</div>} 
         {error && <div className={styles.error}>{error}</div>}
         <ReactDataGrid

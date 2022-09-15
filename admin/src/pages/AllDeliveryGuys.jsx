@@ -24,10 +24,13 @@ const AllDeliveryGuys = () => {
     const [msg, setMsg] = useState(null)
     const [error, setError] = useState(null)
     const [show, setShow] = useState(false)
+    const [name, setName] = useState('')
+    const [address, setAddress] = useState('')
+    const [status, setStatus] = useState('all')
     
     const handleDeleteDeliveryGuy = async (id) => {
     try {
-        const res = await Fetch.delete(`/users/${id}`, {headers: {token: localStorage.token}})
+        await Fetch.delete(`/users/${id}`, {headers: {token: localStorage.token}})
         setMsg("Delivery guy has been deleted..")
         setTimeout(() => setMsg(null), 5000)
     } catch (error) {
@@ -105,7 +108,14 @@ const AllDeliveryGuys = () => {
     }, [orders]);
 
 
-    const rows = deliveryGuys?.map((deliveryGuy) => {
+    const rows = deliveryGuys?.filter(deliveryGuy => status === "active" 
+    ? !deliveryGuy.isBlocked 
+    : status === "suspended"
+    ? deliveryGuy.isBlocked 
+    : (deliveryGuy.isBlocked || !deliveryGuy.isBlocked ))
+    .filter(deliveryGuy => deliveryGuy.address.toLowerCase().trim().startsWith(address.toLowerCase().trim()))
+    .filter(deliveryGuy => deliveryGuy.name.toLowerCase().trim().startsWith(name.toLowerCase().trim()))
+    .map((deliveryGuy) => {
         const deliveryOrders = orders.filter(order => order?.deliveredBy === deliveryGuy?._id)
         const deliveryRevenue = deliveryOrders.length > 0 
             ? deliveryOrders.map(order => order.deliveryCost).reduce((a,b) => a + b)
@@ -164,7 +174,7 @@ const AllDeliveryGuys = () => {
             />
         </div>
     )
-    }})
+    }}).sort((a,b) => Number(b.merkatoRevenue.replace('TND', '').trim()) - Number(a.merkatoRevenue.replace('TND', '').trim()))
     
     const columns = [
     {
@@ -223,10 +233,33 @@ return (
 <div className={styles.container}>
     <Sidebar/>
     <div className={styles.wrapper}>
-        <div className={styles.title}><h2>ALL DELIVERY GUYS</h2></div>
-        <button className={styles.addDeliveryGuy} onClick={() => setShow(true)}>
-            <GrAdd className={styles.addDeliveryGuyIcon}/>
-        </button>
+        <div className={styles.title}>
+            <h2>ALL DELIVERY GUYS</h2>
+        </div>
+        <div className={styles.header}>
+            <button className={styles.addDeliveryGuy} onClick={() => setShow(true)}>
+                <GrAdd className={styles.addDeliveryGuyIcon}/>
+            </button>
+            <input
+            className={styles.search}
+            type='text'
+            placeholder='Name..'
+            value={name}
+            onChange={e => setName(e.target.value)}
+            />
+            <input
+            className={styles.search}
+            type='text'
+            placeholder='Address..'
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            />
+            <select onChange={e => setStatus(e.target.value)} className={styles.search}>
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+            </select>
+        </div>
         {msg && <div className={styles.msg}>{msg}</div>} 
         {error && <div className={styles.error}>{error}</div>}
         {deliveryGuys &&
@@ -234,6 +267,7 @@ return (
         className={styles.datagrid}
         columns={columns}
         rows={rows}
+        sortable={true}
         />
         }
         {show && 

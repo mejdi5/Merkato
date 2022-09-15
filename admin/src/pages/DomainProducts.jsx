@@ -24,6 +24,11 @@ const DomainProducts = () => {
     const [error, setError] = useState(null)
     const [showProduct, setShowProduct] = useState(false)
     const [productImage, setProductImage] = useState(null)
+    const [title, setTitle] = useState(null)
+    const [category, setCategory] = useState('')
+    const [color, setColor] = useState('')
+    const [size, setSize] = useState('')
+    const [status, setStatus] = useState('')
 
   const handleDeleteProduct = async (id) => {
     try {
@@ -64,7 +69,18 @@ const DomainProducts = () => {
     getDomainProducts();
     }, [products]);
 
-    const rows = products && products.map((product) => {
+    const rows = products && products.filter(product => 
+      status === "in stock" 
+      ? product.inStock 
+      : status === "out of stock"
+      ? !product.inStock 
+      : true
+      )
+      .filter(product => title ? product?.title?.toLowerCase().trim().startsWith(title.toLowerCase().trim()) : true)
+      .filter(product => category ? product?.category?.toLowerCase().trim().startsWith(category.toLowerCase().trim()) : true)
+      .filter(product => color ? product?.color?.toLowerCase().trim().startsWith(color.toLowerCase().trim()) : true)
+      .filter(product => size ? product?.size?.toLowerCase().trim().startsWith(size.toLowerCase().trim()) : true)
+    .map((product) => {
     return {
     id: product._id,
     title: (
@@ -166,7 +182,7 @@ return (
 <div className={styles.container}>
     <Sidebar/>
     <div className={styles.wrapper}>
-    <div className={styles.title}><h2>PRODUCTS</h2></div>
+    <div className={styles.title}><h2>{currentDomain?.name?.toUpperCase()} PRODUCTS</h2></div>
     <div className={styles.info}>
       <div className={styles.domainId}>
         <span className={styles.domainLabel}>DOMAIN ID:</span>
@@ -176,6 +192,41 @@ return (
         <span className={styles.domainLabel}>DOMAIN NAME:</span>
         <span>{currentDomain?.name}</span>
       </div>
+    </div>
+    <div className={styles.header}>
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Title..'
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        />
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Category..'
+        value={category}
+        onChange={e => setCategory(e.target.value)}
+        />
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Color..'
+        value={color}
+        onChange={e => setColor(e.target.value)}
+        />
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Size..'
+        value={size}
+        onChange={e => setSize(e.target.value)}
+        />
+        <select onChange={e => setStatus(e.target.value)} className={styles.search}>
+            <option value="all">All</option>
+            <option value="in stock">In Stock</option>
+            <option value="out of stock">Out Of Stock</option>
+        </select>
     </div>
     {msg && <div className={styles.msg}>{msg}</div>} 
     {error && <div className={styles.error}>{error}</div>}

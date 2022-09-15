@@ -25,7 +25,7 @@ router.post("/", isAdmin, async (req, res) => {
 });
 
 //Get taxes
-router.get("/", async (req, res) => {
+router.get("/", async (req, res) => { 
     try {
         const taxes = await Taxe.find()
         res.status(200).json(taxes);

@@ -25,6 +25,9 @@ const DomainOrders = () => {
     const domainId = useParams().domainId
     const currentDomain = marketPlaces.find(m => m?._id === domainId)
     const [msg, setMsg] = useState(null)
+    const [status, setStatus] = useState('all')
+    const [customerName, setCustomerName] = useState('')
+    const [governorate, setGovernorate] = useState('')
 
     
     const handleDeleteOrder = async (id) => {
@@ -65,7 +68,21 @@ const DomainOrders = () => {
     }, []);
 
 
-    const rows = orders.map((order) => {
+    const rows = orders?.filter(order => 
+        status === "delivered" 
+        ? order.status === "delivered"
+        : status === "declined"
+        ? order.status === "declined"
+        : status === "in progress"
+        ? order.status === "in progress"
+        : true
+    )
+    .filter(order => {
+        const customer = users?.find(u => u?._id === order?.userId)
+        return customer.name.toLowerCase().trim().startsWith(customerName.toLowerCase().trim())
+    })
+    .filter(order => order.address.governorate?.toLowerCase().trim().startsWith(governorate.toLowerCase().trim()))
+    .map((order) => {
     const user = users?.find(u => u?._id === order?.userId)
     return {
     id: order._id,
@@ -164,7 +181,7 @@ return (
 <div className={styles.container}>
     <Sidebar/>
     <div className={styles.wrapper}>
-    <div className={styles.title}><h2>ORDERS</h2></div>
+    <div className={styles.title}><h2>{currentDomain?.name?.toUpperCase()} ORDERS</h2></div>
     <div className={styles.info}>
         <div className={styles.domainId}>
             <span className={styles.domainLabel}>DOMAIN ID:</span>
@@ -175,9 +192,28 @@ return (
             <span>{currentDomain?.name}</span>
         </div>
     </div>
-    {/*
-    {msg && <div className='user-delete-msg'>{msg}</div>} 
-    */}
+    <div className={styles.header}>
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Customer Name..'
+        value={customerName}
+        onChange={e => setCustomerName(e.target.value)}
+        />
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Governorate..'
+        value={governorate}
+        onChange={e => setGovernorate(e.target.value)}
+        />
+        <select onChange={e => setStatus(e.target.value)} className={styles.search}>
+            <option value="all" defaultValue>All</option>
+            <option value="in progress">In Progress</option>
+            <option value="delivered">Delivered</option>
+            <option value="declined">Declined</option>
+        </select>
+    </div>
     {rows.length > 0 
     ?
     <ReactDataGrid

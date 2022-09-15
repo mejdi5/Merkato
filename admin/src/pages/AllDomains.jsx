@@ -23,6 +23,11 @@ const AllDomains = () => {
     const navigate = useNavigate()
     const [msg, setMsg] = useState(null)
     const [error, setError] = useState(null)
+    const [name, setName] = useState('')
+    const [managerName, setManagerName] = useState('')
+    const [category, setCategory] = useState('')
+    const [position, setPosition] = useState('')
+    const [status, setStatus] = useState('all')
     
     const handleDeleteDomain = async (e, id) => {
         e.preventDefault();
@@ -92,7 +97,21 @@ const AllDomains = () => {
     }, [marketPlaces]);
 
 
-    const rows = marketPlaces.map((domain) => {
+    const rows = marketPlaces?.filter(domain => 
+    status === "online" 
+    ? !domain.isBlocked 
+    : status === "offline"
+    ? domain.isBlocked 
+    : (domain.isBlocked || !domain.isBlocked )
+    )
+    .filter(domain => category ? domain?.category?.toLowerCase().trim().startsWith(category.toLowerCase().trim()) : true)
+    .filter(domain => domain.position?.toLowerCase().trim().startsWith(position.toLowerCase().trim()))
+    .filter(domain => domain.name?.toLowerCase().trim().startsWith(name.toLowerCase().trim()))
+    .filter(domain => {
+        const manager = users?.find(u => u?._id === domain.userId)
+        return manager?.name?.toLowerCase().trim().startsWith(managerName.toLowerCase().trim())
+    })
+    .map((domain) => {
         const user = users?.find(u => u?._id === domain.userId)
     return {
     id: domain._id,
@@ -186,6 +205,41 @@ return (
     <Sidebar/>
     <div className={styles.wrapper}>
     <div className={styles.title}><h2>ALL DOMAINS</h2></div>
+    <div className={styles.header}>
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Domain Name..'
+        value={name}
+        onChange={e => setName(e.target.value)}
+        />
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Manager Name..'
+        value={managerName}
+        onChange={e => setManagerName(e.target.value)}
+        />
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Category..'
+        value={category}
+        onChange={e => setCategory(e.target.value)}
+        />
+        <input
+        className={styles.search}
+        type='text'
+        placeholder='Position..'
+        value={position}
+        onChange={e => setPosition(e.target.value)}
+        />
+        <select onChange={e => setStatus(e.target.value)} className={styles.search}>
+            <option value="all">All</option>
+            <option value="online">Online</option>
+            <option value="offline">Offline</option>
+        </select>
+    </div>
     {msg && <div className={styles.msg}>{msg}</div>} 
     {error && <div className={styles.error}>{error}</div>} 
     <ReactDataGrid

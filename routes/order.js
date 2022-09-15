@@ -20,7 +20,6 @@ router.post("/", isAuthenticated, async (req, res) => {
             domainId: req.body.domainId,
             products: req.body.products,
             address: req.body.address,
-            status: req.body.status,
             total: totalProductsPrice,
             deliveryCost: taxe.deliveryCost,
             fees: taxe.fees,

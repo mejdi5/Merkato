@@ -23,7 +23,7 @@ router.get("/", isAdmin, async (req, res) => {
     } catch (err) {
     res.status(500).json(err);
     }
-});
+});  
 
 //Get all delivery guys (for admin)
 router.get("/delivery-guys", isAdmin, async (req, res) => {

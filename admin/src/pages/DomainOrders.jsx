@@ -25,6 +25,7 @@ const DomainOrders = () => {
     const domainId = useParams().domainId
     const currentDomain = marketPlaces.find(m => m?._id === domainId)
     const [msg, setMsg] = useState(null)
+    const [error, setError] = useState(null)
     const [status, setStatus] = useState('all')
     const [customerName, setCustomerName] = useState('')
     const [governorate, setGovernorate] = useState('')
@@ -33,9 +34,13 @@ const DomainOrders = () => {
     const handleDeleteOrder = async (id) => {
     try {
         const res = await Fetch.delete(`/orders/${id}`)
+        const response = await Fetch.get(`/orders/market-orders/${domainId}`, {headers: {token: localStorage.token}}); 
+        dispatch(getOrders(response.data));
         setMsg(res.data.msg)
+        setTimeout(() => setMsg(null), 3000)
     } catch (error) {
-        console.log(error.message)
+        setError("Action not allowed")
+        setTimeout(() => setError(null), 3000)
     }
     };
 
@@ -214,6 +219,8 @@ return (
             <option value="declined">Declined</option>
         </select>
     </div>
+    {msg && <div className={styles.msg}>{msg}</div>} 
+    {error && <div className={styles.error}>{error}</div>}
     {rows.length > 0 
     ?
     <ReactDataGrid

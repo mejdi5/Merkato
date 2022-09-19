@@ -98,6 +98,20 @@
     font-weight: bold;
 }
 
+.msg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: green
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red
+}
+
 .noOrders {
     height: 100%;
     display: flex;
@@ -113,7 +127,8 @@
 }
 
 .datagrid {
-    height: calc(100% - 90px);
+    max-height: 70vh;
+    margin: 0px 20px;
     overflow-y: scroll;
 }
 

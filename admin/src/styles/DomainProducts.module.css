@@ -103,7 +103,8 @@
 }
 
 .datagrid {
-    height: calc(100% - 90px);
+    max-height: 70vh;
+    margin: 0px 20px;
     overflow-y: scroll;
 }
 

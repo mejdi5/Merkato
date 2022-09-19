@@ -5,7 +5,6 @@ import { getAllUsers } from '../redux/userSlice';
 import { Fetch } from '../Fetch';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
-import { GrAdd } from 'react-icons/gr'
 import { AiFillDelete, AiOutlineCreditCard } from 'react-icons/ai'
 import ReactDataGrid from 'react-data-grid';
 import { confirmAlert } from 'react-confirm-alert'; 
@@ -34,6 +33,8 @@ const AllUsers = () => {
   const handleDeleteUser = async (id) => {
     try {
       const res = await Fetch.delete(`/users/${id}`, {headers: {token: localStorage.token}})
+      const response = await Fetch.get("/users", {headers: {token: localStorage.token}}); 
+      dispatch(getAllUsers(response.data));
       setMsg(res.data)
       setTimeout(() => setMsg(null), 5000)
     } catch (error) {
@@ -62,17 +63,20 @@ const AllUsers = () => {
 
   useEffect(() => {
     const getUsers = async () => {
-        try {
-        const res = await Fetch.get("/users", {headers: {token: localStorage.token}}); 
-        dispatch(getAllUsers(res.data));
-        } catch (error) {
-          console.log(error)
-        }
-    };
-    getUsers();
-    }, [users]);
+      try {
+      const res = await Fetch.get("/users", {headers: {token: localStorage.token}}); 
+      dispatch(getAllUsers(res.data));
+      } catch (error) {
+        console.log(error)
+      }
+  }
+  console.count()
+  getUsers()
+  }, [dispatch]) 
 
-    const rows = users.filter(user => user.address.toLowerCase().trim().startsWith(address.toLowerCase().trim()))
+
+
+    const rows = users?.length > 0 && users?.filter(user => user.address?.toLowerCase().trim().startsWith(address?.toLowerCase().trim()))
     .filter(user => user.name.toLowerCase().trim().startsWith(name.toLowerCase().trim()))
     .map((user) => {
       return {
@@ -183,7 +187,6 @@ return (
         columns={columns}
         rows={rows}
         />
-        
     </div>
 </div>
 )}

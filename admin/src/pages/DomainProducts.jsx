@@ -33,6 +33,8 @@ const DomainProducts = () => {
   const handleDeleteProduct = async (id) => {
     try {
       const res = await Fetch.delete(`/products/${id}`, {headers: {token: localStorage.token}})
+      const response = await Fetch.get(`/products/${domainId}`, {headers: {token: localStorage.token}}); 
+      dispatch(getProducts(response.data));
       setMsg(res.data)
       setTimeout(() => setMsg(null), 5000)
     } catch (error) {
@@ -67,7 +69,7 @@ const DomainProducts = () => {
         }
     };
     getDomainProducts();
-    }, [products]);
+    }, []);
 
     const rows = products && products.filter(product => 
       status === "in stock" 

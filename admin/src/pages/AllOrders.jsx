@@ -33,6 +33,8 @@ const AllOrders = () => {
     const handleDeleteOrder = async (id) => {
     try {
         const res = await Fetch.delete(`/orders/${id}`, {headers: {token: localStorage.token}})
+        const response = await Fetch.get("/orders", {headers: {token: localStorage.token}}); 
+        dispatch(getOrders(response.data));
         setMsg(res.data)
         setTimeout(() => setMsg(null), 5000)
     } catch (error) {
@@ -67,7 +69,7 @@ const AllOrders = () => {
         }
     };
     getAllOrders();
-    }, [orders]);
+    }, []);
 
 
     const rows = orders?.filter(order => 
@@ -177,17 +179,17 @@ const AllOrders = () => {
     {
         key: "governorate",
         name: "GOVERNORATE",
-        width: 130
+        width: 100
     },
     {
         key: "status",
         name: "STATUS",
-        width: 120
+        width: 100
     },
     {
         key: "action",
         name: "ACTION",
-        width: 100
+        width: 80
     },
 ]
 

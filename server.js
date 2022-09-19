@@ -12,7 +12,7 @@ mongoose
     .connect("mongodb://localhost:27017/Delivery") 
     .then(() => console.log("Database connected.."))
     .catch((error) => {
-    console.log(error, "Database is not connected..");
+    console.log(error, "Database is not connected.."); 
 });
 
 
@@ -24,7 +24,7 @@ app.use("/api/verify-account", require('./routes/verifyAccount'));
 app.use("/api/users", require('./routes/user'));
 app.use("/api/marketPlaces", require('./routes/marketPlace'));
 app.use("/api/orders", require('./routes/order'));
-app.use("/api/taxes", require('./routes/taxe'));
+app.use("/api/taxes", require('./routes/taxe'));  
 app.use("/api/products", require('./routes/product'));
 
 

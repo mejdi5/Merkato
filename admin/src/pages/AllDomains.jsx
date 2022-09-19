@@ -33,6 +33,8 @@ const AllDomains = () => {
         e.preventDefault();
     try {
         const res = await Fetch.delete(`/marketPlaces/${id}`, {headers: {token: localStorage.token}})
+        const response = await Fetch.get("/marketPlaces", {headers: {token: localStorage.token}}); 
+        dispatch(getMarketPlaces(response.data));
         setMsg(res.data)
         setTimeout(() => setMsg(null), 5000)
     } catch (error) {
@@ -61,7 +63,9 @@ const AllDomains = () => {
     const handleBlockDomain = async (e, id) => {
         e.preventDefault();
         try {
-            const res = await Fetch.put(`/marketPlaces/${id}`, {isBlocked: true}, {headers: {token: localStorage.token}})
+            await Fetch.put(`/marketPlaces/${id}`, {isBlocked: true}, {headers: {token: localStorage.token}})
+            const res = await Fetch.get("/marketPlaces", {headers: {token: localStorage.token}}); 
+            dispatch(getMarketPlaces(res.data));
             setMsg("Domain blocked")
             setTimeout(() => setMsg(null), 5000)
         } catch (error) {
@@ -74,7 +78,9 @@ const AllDomains = () => {
     const handleUnblockDomain = async (e, id) => {
         e.preventDefault();
         try {
-            const res = await Fetch.put(`/marketPlaces/${id}`, {isBlocked: false}, {headers: {token: localStorage.token}})
+            await Fetch.put(`/marketPlaces/${id}`, {isBlocked: false}, {headers: {token: localStorage.token}})
+            const res = await Fetch.get("/marketPlaces", {headers: {token: localStorage.token}}); 
+            dispatch(getMarketPlaces(res.data));
             setMsg("Domain unblocked")
             setTimeout(() => setMsg(null), 5000)
         } catch (error) {
@@ -94,7 +100,7 @@ const AllDomains = () => {
         }
     };
     getAllMarketPlaces();
-    }, [marketPlaces]);
+    }, []);
 
 
     const rows = marketPlaces?.filter(domain => 

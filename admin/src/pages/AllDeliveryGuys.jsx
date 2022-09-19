@@ -31,6 +31,8 @@ const AllDeliveryGuys = () => {
     const handleDeleteDeliveryGuy = async (id) => {
     try {
         await Fetch.delete(`/users/${id}`, {headers: {token: localStorage.token}})
+        const res = await Fetch.get("/users/delivery-guys", {headers: {token: localStorage.token}}); 
+        dispatch(getAllDeliveryGuys(res.data));
         setMsg("Delivery guy has been deleted..")
         setTimeout(() => setMsg(null), 5000)
     } catch (error) {
@@ -60,6 +62,8 @@ const AllDeliveryGuys = () => {
         e.preventDefault();
         try {
             await Fetch.put(`/users/deliveryGuy/${id}`, {isBlocked: true}, {headers: {token: localStorage.token}})
+            const res = await Fetch.get("/users/delivery-guys", {headers: {token: localStorage.token}}); 
+            dispatch(getAllDeliveryGuys(res.data));
             setMsg("Delivery Guy blocked")
             setTimeout(() => setMsg(null), 5000)
         } catch (error) {
@@ -73,6 +77,8 @@ const AllDeliveryGuys = () => {
         e.preventDefault();
         try {
             await Fetch.put(`/users/deliveryGuy/${id}`, {isBlocked: false}, {headers: {token: localStorage.token}})
+            const res = await Fetch.get("/users/delivery-guys", {headers: {token: localStorage.token}}); 
+            dispatch(getAllDeliveryGuys(res.data));
             setMsg("Delivery Guy unblocked")
             setTimeout(() => setMsg(null), 5000)
         } catch (error) {
@@ -82,30 +88,29 @@ const AllDeliveryGuys = () => {
         }
     };
 
-
     useEffect(() => {
-    const getDeliveryGuys = async () => {
-        try {
-        const res = await Fetch.get("/users/delivery-guys", {headers: {token: localStorage.token}}); 
-        dispatch(getAllDeliveryGuys(res.data));
-        } catch (error) {
-            console.log(error)
-        }
-    };
-    getDeliveryGuys();
-    }, [deliveryGuys]);
+        const getDeliveryGuys = async () => {
+            try {
+            const res = await Fetch.get("/users/delivery-guys", {headers: {token: localStorage.token}}); 
+            dispatch(getAllDeliveryGuys(res.data));
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        getDeliveryGuys();
+    }, [dispatch]);
 
     useEffect(() => {
         const getAllOrders = async () => {
             try {
             const res = await Fetch.get("/orders", {headers: {token: localStorage.token}}); 
-            dispatch(getOrders(res.data));
+            dispatch(getOrders(res.data)); 
             } catch (error) {
                 console.log(error)
             }
         };
         getAllOrders();
-    }, [orders]);
+    }, [dispatch]);
 
 
     const rows = deliveryGuys?.filter(deliveryGuy => status === "active" 

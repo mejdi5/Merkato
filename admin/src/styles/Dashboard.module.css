@@ -1,23 +1,30 @@
 .container{
     display: flex;
+    overflow-y: hidden;
 }
 
 .wrapper {
     flex: 5;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
+    height: 100vh
 }
 
 .top {
-    height: 30%;
+    height: 20%;
     margin: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+}
+
+.center {
+    height: 35%;
+    margin: 0px 20px;
 }
 
 .bottom{
     display: flex;
-    height: 70%;
+    height: 25%;
     margin: 20px;
-    margin-top: 10px;
+    margin-top: 0px;
 }

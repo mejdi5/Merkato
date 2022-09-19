@@ -1,5 +1,6 @@
 .container{
     display: flex;
+    overflow-y: hidden;
 }
 
 .wrapper {
@@ -95,7 +96,8 @@
 }
 
 .datagrid {
-    height: calc(100% - 40px);
+    max-height: 80vh;
+    margin: 0px 20px;
     overflow-y: scroll;
 }
 
@@ -105,3 +107,5 @@
 ::-webkit-scrollbar-thumb {
     background: #888; 
 };
+
+

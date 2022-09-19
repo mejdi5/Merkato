@@ -2,6 +2,8 @@ import React, {useState, useRef} from 'react';
 import { Button,Form, Label, FormGroup, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import styles from "../styles/AddDeliveryGuyModal.module.css"
 import { Fetch } from '../Fetch';
+import { getAllDeliveryGuys } from '../redux/userSlice';
+import { useDispatch } from 'react-redux';
 
 const AddDeliveryGuyModal = ({show, setShow}) => {
 
@@ -12,6 +14,7 @@ const AddDeliveryGuyModal = ({show, setShow}) => {
     const phoneNumber = useRef(null)
     const address = useRef(null)
     const [error, setError] = useState(null)
+    const dispatch = useDispatch()
 
 
     const handleAddDeliveryGuy = async (e) => {
@@ -25,6 +28,8 @@ const AddDeliveryGuyModal = ({show, setShow}) => {
                 phoneNumber: phoneNumber?.current?.value,
                 address: address?.current?.value,
             }, {headers: {token: localStorage.token}})
+            const res = await Fetch.get("/users/delivery-guys", {headers: {token: localStorage.token}}); 
+            dispatch(getAllDeliveryGuys(res.data))
         } catch (error) {
             console.log(error)
             setError("Action not allowed")

@@ -1,5 +1,6 @@
 .container{
     display: flex;
+    overflow-y: hidden;
 }
 
 .wrapper {
@@ -132,7 +133,8 @@
 }
 
 .datagrid {
-    height: calc(100% - 70px);
+    max-height: 80vh;
+    margin: 0px 20px;
     overflow-y: scroll;
 }
 

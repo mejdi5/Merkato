@@ -2,9 +2,8 @@ import React,{useState, useEffect} from 'react'
 import styles from '../styles/SingleOrder.module.css'
 import Sidebar from '../components/Sidebar'
 import { Fetch } from '../Fetch';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
-import { AiFillDelete } from 'react-icons/ai'
 import ReactDataGrid from 'react-data-grid';
 import { getProducts } from '../redux/productSlice';
 
@@ -20,7 +19,6 @@ const SingleOrder = () => {
     const customer = users.find(u => u?._id === currentOrder.userId)
     const domain = marketPlaces.find(m => m?._id === currentOrder.domainId)
     const dispatch = useDispatch()
-    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -33,7 +31,7 @@ const SingleOrder = () => {
           }
       };
       getOrderProducts();
-      }, [products]);
+      }, []);
 
 
     const rows = currentOrder.products.map((item) => {

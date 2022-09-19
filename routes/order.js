@@ -75,7 +75,6 @@ router.get("/market-orders/:marketId", isAuthenticated, async (req, res) => {
         const marketPlace = await MarketPlace.findById(req.params.marketId);
         if(req.user.userType === "admin" || req.user.id === marketPlace.userId) {                                                                                                                
             const orders = await Order.find({ domainId: req.params.marketId }).sort({createdAt: -1});
-            console.log(orders)
             res.status(200).json(orders);
         } else {
             res.status(403).json("You are not allowed to do that");

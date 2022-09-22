@@ -106,7 +106,7 @@ return (
         <div className={styles.footer}>
             <Button 
             onClick={e => handleLogin(e)}
-            color="success" 
+            color="warning" 
             size="lg" 
             block>Login</Button>
         </div>

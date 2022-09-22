@@ -81,9 +81,26 @@ router.put("/:userId", isAuthenticated, async (req, res) => {
     }
 });
 
-//block/Unblock delivery guy (for the user itself)
+//set delivery guy as paid (for admin)
+router.put("/pay/:deliveryGuyId", isAdmin, async (req, res) => {
+    try {
+        const userToUpdate = await User.findById(req.params.deliveryGuyId)
+        if (userToUpdate.userType !== "delivery_guy") {
+            res.status(401).json("This user is not a delivery guy")
+        }
+        const updatedDeliveryGuy = await User.findByIdAndUpdate(
+        req.params.deliveryGuyId,   
+        {$set: req.body},
+        { new: true }
+        );
+    res.status(200).json(updatedDeliveryGuy);
+    }catch (err) {
+    res.status(500).json(err);
+    }
+});
+
+//block/Unblock delivery guy (for admin)
 router.put("/deliveryGuy/:deliveryGuyId", isAdmin, async (req, res) => {
-    console.log(req.body)
     try {
         const updatedUser = await User.findByIdAndUpdate(
         req.params.deliveryGuyId,   
@@ -97,6 +114,7 @@ router.put("/deliveryGuy/:deliveryGuyId", isAdmin, async (req, res) => {
     res.status(500).json(err);
     }
 });
+
 
 //edit password (for the user itself)
 router.put("/edit-password/:userId", isAuthenticated, async (req, res) => {

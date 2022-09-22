@@ -24,11 +24,12 @@ const OrderSchema = new mongoose.Schema(
     totalToPay: { type: Number },
     address: {
         governorate: {type: String, required: true},
-        city: {type: String, required: true},
+        city: {type: String},
         zipCode: {type: Number},
     },
     status: { type: String, enum: ["in progress", "delivered", "declined"], default: "in progress" },
-    deliveredBy: {type: String, default: null}
+    deliveredBy: {type: String, default: null},
+    deliveryDate: {type: Date, default: null}
 },
 { timestamps: true }
 );

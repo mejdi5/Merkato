@@ -8,6 +8,7 @@ const MarketPlaceSchema = new mongoose.Schema(
     category: { type: String },
     position: { type: String, required: true },
     isBlocked: { type: Boolean, default: false},
+    paymentDate: { type: Date, default: null},
     likes: {type: Array}
 },
 { timestamps: true }

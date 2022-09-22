@@ -67,4 +67,18 @@ router.put("/:marketId", isAuthenticated, async (req, res) => {
     }
 });
 
+//set new payment date
+router.put("/pay/:marketId", isAdmin, async (req, res) => {
+    try {
+        const updatedMarketPlace = await MarketPlace.findByIdAndUpdate(
+            req.params.marketId,
+            {$set: req.body},
+            { new: true }
+        );
+    res.status(200).json(updatedMarketPlace);
+    } catch (err) {
+    res.status(500).json(err);
+    }
+});
+
 module.exports = router;

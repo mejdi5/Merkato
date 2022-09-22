@@ -10,6 +10,7 @@ import ReactDataGrid from 'react-data-grid';
 import { getMarketPlaces } from '../redux/marketPlaceSlice';
 import {BiBlock} from 'react-icons/bi'
 import {CgUnblock} from 'react-icons/cg'
+import {AiOutlineEuro} from 'react-icons/ai'
 import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import {HiStatusOnline, HiOutlineStatusOffline} from 'react-icons/hi'
@@ -19,6 +20,7 @@ const AllDomains = () => {
 
     const users = useSelector(state => state.userSlice.users)
     const marketPlaces = useSelector(state => state.marketPlaceSlice.marketPlaces)
+    const orders = useSelector(state => state.orderSlice.orders)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [msg, setMsg] = useState(null)
@@ -52,6 +54,38 @@ const AllDomains = () => {
             {
                 label: 'Yes',
                 onClick: () => handleDeleteDomain(e, id)
+            },
+            {
+                label: 'No',
+            }
+        ]
+        });
+    };
+
+    const handlePayDomain = async (e, id) => {
+        e.preventDefault();
+    try {
+        await Fetch.put(`/marketPlaces/pay/${id}`, {paymentDate: Date.now()}, {headers: {token: localStorage.token}})
+        const res = await Fetch.get("/marketPlaces", {headers: {token: localStorage.token}}); 
+        dispatch(getMarketPlaces(res.data));
+        setMsg("a domain has been set as paid")
+        setTimeout(() => setMsg(null), 5000)
+    } catch (error) {
+        console.log(error)
+        setError('Action not allowed')
+        setTimeout(() => setError(null), 5000)
+    }
+    };
+
+    const confirmPayingDomain = (e, id) => {
+        const domainToPay = marketPlaces?.find(m => m?._id === id)
+        confirmAlert({
+            title: 'MARK AS PAID',
+            message: `Do you really want to set ${domainToPay?.name} as paid ? if you type Yes, revenue will be reset to 0 TND`,
+            buttons: [
+            {
+                label: 'Yes',
+                onClick: () => handlePayDomain(e, id)
             },
             {
                 label: 'No',
@@ -119,13 +153,16 @@ const AllDomains = () => {
     })
     .map((domain) => {
         const user = users?.find(u => u?._id === domain.userId)
+        const domainOrders = orders.filter(order => order.status === "delivered" && order.domainId === domain?._id && (order.deliveryDate > domain.paymentDate || !domain.paymentDate))
+        const domainEarnings = domainOrders.map(order => order.total)
+        const earning = domainEarnings.length > 0 ? domainEarnings.reduce((a,b) => a + b) : 0
     return {
     id: domain._id,
-    userId: domain.userId,
     userName: user?.name,
     name: domain.name,
     category: domain.category,
     position: domain.position,
+    earning: `${earning} TND`,
     isBlocked: domain.isBlocked 
         ? (
             <div className={styles.isBlocked}>
@@ -161,6 +198,10 @@ const AllDomains = () => {
             onClick={(e) => handleUnblockDomain(e, domain?._id)}
             />
             }
+            <AiOutlineEuro
+            className={styles.payIcon} 
+            onClick={(e) => confirmPayingDomain(e, domain?._id)}
+            />
             <AiFillDelete
             className={styles.deleteIcon}
             onClick={(e) => confirmDeletingDomain(e, domain._id)}
@@ -176,10 +217,6 @@ const AllDomains = () => {
     {
         key: "name",
         name: "NAME",
-    },
-    {
-        key: "userId",
-        name: "MANAGER ID",
     },
     {
         key: "userName",
@@ -198,6 +235,10 @@ const AllDomains = () => {
         key: "isBlocked",
         name: "STATUS",
         width: 90
+    },
+    {
+        key: "earning",
+        name: "REVENUE"
     },
     {
         key: "action",

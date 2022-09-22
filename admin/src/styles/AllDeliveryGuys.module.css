@@ -104,6 +104,16 @@
     color: green
 }
 
+.payIcon {
+    cursor: pointer;
+    font-size: 20px;
+    color: rgb(104, 159, 21)
+}
+
+.payIcon:hover {
+    color: rgb(3, 40, 3)
+}
+
 .addDeliveryGuy {
     display: inline;
     margin: 10px;

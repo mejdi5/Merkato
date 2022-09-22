@@ -70,9 +70,8 @@ const AllUsers = () => {
         console.log(error)
       }
   }
-  console.count()
   getUsers()
-  }, [dispatch]) 
+  }, []) 
 
 
 

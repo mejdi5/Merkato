@@ -6,7 +6,7 @@ import { getOrders } from '../redux/orderSlice';
 import { Fetch } from '../Fetch';
 import { useDispatch, useSelector } from 'react-redux'
 import { GrAdd } from 'react-icons/gr'
-import { AiFillDelete } from 'react-icons/ai'
+import { AiFillDelete , AiOutlineEuro } from 'react-icons/ai'
 import ReactDataGrid from 'react-data-grid';
 import AddDeliveryGuyModal from '../components/AddDeliveryGuyModal';
 import { confirmAlert } from 'react-confirm-alert'; 
@@ -58,6 +58,38 @@ const AllDeliveryGuys = () => {
         });
     };
 
+    const handlePayDeliveryGuy = async (e, id) => {
+        e.preventDefault();
+    try {
+        await Fetch.put(`/users/pay/${id}`, {paymentDate: Date.now()}, {headers: {token: localStorage.token}})
+        const res = await Fetch.get("/users/delivery-guys", {headers: {token: localStorage.token}}); 
+        dispatch(getAllDeliveryGuys(res.data));
+        setMsg("a delivery guy has been set as paid")
+        setTimeout(() => setMsg(null), 5000)
+    } catch (error) {
+        console.log(error)
+        setError('Action not allowed')
+        setTimeout(() => setError(null), 5000)
+    }
+    };
+
+    const confirmPayingDeliveryGuy = (e, id) => {
+        const deliveryGuyToPay = deliveryGuys?.find(d => d?._id === id)
+        confirmAlert({
+            title: 'MARK AS PAID',
+            message: `Do you really want to set ${deliveryGuyToPay?.name} as paid ? if you type Yes, revenue will be reset to 0 TND`,
+            buttons: [
+            {
+                label: 'Yes',
+                onClick: () => handlePayDeliveryGuy(e, id)
+            },
+            {
+                label: 'No',
+            }
+        ]
+        });
+    };
+
     const handleBlockDeliveryGuy = async (e, id) => {
         e.preventDefault();
         try {
@@ -97,8 +129,10 @@ const AllDeliveryGuys = () => {
                 console.log(error)
             }
         };
-        getDeliveryGuys();
-    }, [dispatch]);
+        return () => {
+            getDeliveryGuys()
+        }
+    }, []);
 
     useEffect(() => {
         const getAllOrders = async () => {
@@ -110,7 +144,7 @@ const AllDeliveryGuys = () => {
             }
         };
         getAllOrders();
-    }, [dispatch]);
+    }, []);
 
 
     const rows = deliveryGuys?.filter(deliveryGuy => status === "active" 
@@ -122,14 +156,17 @@ const AllDeliveryGuys = () => {
     .filter(deliveryGuy => deliveryGuy.name.toLowerCase().trim().startsWith(name.toLowerCase().trim()))
     .map((deliveryGuy) => {
         const deliveryOrders = orders.filter(order => order?.deliveredBy === deliveryGuy?._id)
-        const deliveryRevenue = deliveryOrders.length > 0 
-            ? deliveryOrders.map(order => order.deliveryCost).reduce((a,b) => a + b)
+        const nonPaidDeliveryOrders = deliveryOrders.filter(order => (order.deliveryDate > deliveryGuy.paymentDate || !deliveryGuy.paymentDate))
+        const deliveryRevenue = nonPaidDeliveryOrders.length > 0 
+            ? nonPaidDeliveryOrders.map(order => order.deliveryCost).reduce((a,b) => a + b)
             : 0
         const merkatoRevenue = deliveryOrders.length > 0 
             ? deliveryOrders.map(order => order.fees).reduce((a,b) => a + b)
             : 0
+        const domainsRevenue = deliveryOrders.length > 0 
+        ? deliveryOrders.map(order => order.total).reduce((a,b) => a + b)
+        : 0
     return {
-    id: deliveryGuy?._id,
     cin: deliveryGuy?.cin,
     name: (
         <div className={styles.name}>
@@ -146,6 +183,7 @@ const AllDeliveryGuys = () => {
     address: deliveryGuy?.address,
     deliveryRevenue: `${deliveryRevenue} TND`,
     merkatoRevenue: `${merkatoRevenue} TND`,
+    domainsRevenue: `${domainsRevenue} TND`,
     isBlocked: deliveryGuy?.isBlocked 
         ? (
             <div className={styles.isBlocked}>
@@ -173,6 +211,10 @@ const AllDeliveryGuys = () => {
             onClick={(e) => handleUnblockDeliveryGuy(e, deliveryGuy?._id)}
             />
             }
+            <AiOutlineEuro
+            className={styles.payIcon} 
+            onClick={(e) => confirmPayingDeliveryGuy(e, deliveryGuy?._id)}
+            />
             <AiFillDelete
             className={styles.deleteIcon}
             onClick={() => confirmDeletingDeliveryGuy(deliveryGuy._id)}
@@ -182,10 +224,6 @@ const AllDeliveryGuys = () => {
     }}).sort((a,b) => Number(b.merkatoRevenue.replace('TND', '').trim()) - Number(a.merkatoRevenue.replace('TND', '').trim()))
     
     const columns = [
-    {
-        key: "id",
-        name: "DELIVERY GUY ID",
-    },
     {
         key: "cin",
         name: "CIN",
@@ -214,12 +252,17 @@ const AllDeliveryGuys = () => {
     {
         key: "deliveryRevenue",
         name: "DELIVERY REVENUE",
-        width: 135
+        width: 150
     },
     {
         key: "merkatoRevenue",
         name: "MERKATO REVENUE",
-        width: 135
+        width: 150
+    },
+    {
+        key: "domainsRevenue",
+        name: "DOMAINS REVENUE",
+        width: 160
     },
     {
         key: "isBlocked",
@@ -229,7 +272,7 @@ const AllDeliveryGuys = () => {
     {
         key: "action",
         name: "ACTION",
-        width: 100,
+        width: 80,
     },
     ]
 

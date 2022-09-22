@@ -15,10 +15,12 @@ import SingleOrder from './pages/SingleOrder'
 import AllDeliveryGuys from './pages/AllDeliveryGuys';
 import Profile from './pages/Profile';
 
+
 function App() {
 
   const isLoading = useSelector(state => state.userSlice.isLoading) 
   const user = useSelector(state => state.userSlice.user)
+
 
 return (
 <BrowserRouter>

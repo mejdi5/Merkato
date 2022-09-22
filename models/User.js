@@ -12,6 +12,7 @@ const UserSchema = new mongoose.Schema(
     userType: { type: String, enum: ["admin", "delivery_guy", "user"], default: "user"},
     isVerified: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false},
+    paymentDate: { type: Date, default: null},
 }, 
 { timestamps: true }
 );

@@ -1,10 +1,11 @@
 .container{
     display: flex;
+    overflow-y: hidden;
 }
 
 .wrapper {
     flex: 5;
-    height: 100%
+    height: 100%;
 }
 
 .title {

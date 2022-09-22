@@ -7,7 +7,7 @@ const Taxe = require("../models/Taxe");
 
 
 //Create new Order
-router.post("/", isAuthenticated, async (req, res) => {
+router.post("/", /*isAuthenticated,*/ async (req, res) => {
     try {
         const taxe = await Taxe.findOne({governorate: req.body.address.governorate})
         const products = await Product.find()
@@ -25,19 +25,19 @@ router.post("/", isAuthenticated, async (req, res) => {
             fees: taxe.fees,
             totalToPay: totalProductsPrice + taxe.deliveryCost + taxe.fees
         });
-        const marketPlace = await MarketPlace.findById(newOrder.domainId);
+        /*const marketPlace = await MarketPlace.findById(newOrder.domainId);
         if(!req.user.isVerified) {
             res.status(402).json("You must verify your account first")
         } else if (marketPlace.isBlocked) {
             res.status(401).json("market place is blocked! You cannot post this order");
         } else if (req.user.id === marketPlace.userId) {
             res.status(401).json("You cannot post an order in your own market place");
-        } else if (req.user.userType === "user" && req.user.id !== marketPlace.userId) {                                                                                                             
+        } else if (req.user.userType === "user" && req.user.id !== marketPlace.userId) { */                                                                                                           
             const savedOrder = await newOrder.save();
             res.status(200).json({msg: "Order posted with success", savedOrder});
-        } else {
+        /*} else {
             res.status(403).json("You are not allowed to do that");
-        }
+        }*/
     } catch (err) {
         console.log(err)
     res.status(500).json(err);
@@ -121,7 +121,8 @@ router.put("/delivered/:orderId", isDeliveryGuy,  async (req, res) => {
         req.params.orderId,
         {$set: {
             status: "delivered",
-            deliveredBy: req.user.id
+            deliveredBy: req.user.id,
+            deliveryDate: Date.now()
         }},
         { new: true }
         );
@@ -166,4 +167,4 @@ try {
 
 
 
-module.exports = router;
+module.exports = router; 
